@@ -14,9 +14,26 @@ datasource db {
 }
 
 model User {
-  id         Int    @id @default(autoincrement())
-  first_name String @db.VarChar(25)
-  last_name  String @db.VarChar(25)
-  email      String @unique @db.VarChar(320)
-  password   String @db.VarChar(250)
+  id            Int            @id @default(autoincrement())
+  first_name    String         @db.VarChar(25)
+  last_name     String         @db.VarChar(25)
+  email         String         @unique @db.VarChar(320)
+  password      String         @db.VarChar(250)
+  refreshTokens RefreshToken[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  tokenHash String   @db.VarChar(250)
+  expiresAt DateTime
+  issuedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

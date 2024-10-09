@@ -13,9 +13,46 @@ export class UserRepository {
     });
   }
 
+  async getUserById(id: number) {
+    return await this.prismaService.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+  }
+
   async createUser(dto: any) {
     return await this.prismaService.user.create({
       data: dto,
     });
+  }
+
+  async updateRefreshToken(userId: number, newTokenHash: string): Promise<void> {
+    const tokenExpiration = new Date();
+    tokenExpiration.setDate(tokenExpiration.getDate() + 7);
+
+    const existingToken = await this.prismaService.refreshToken.findFirst({
+      where: {userId: userId},
+    });
+
+    if (existingToken) {
+      await this.prismaService.refreshToken.update({
+        where: {id: existingToken.id},
+        data: {
+          tokenHash: newTokenHash,
+          expiresAt: tokenExpiration,
+          issuedAt: new Date(),
+        },
+      });
+    } else {
+      await this.prismaService.refreshToken.create({
+        data: {
+          userId: userId,
+          tokenHash: newTokenHash,
+          expiresAt: tokenExpiration,
+          issuedAt: new Date(),
+        },
+      });
+    }
   }
 }

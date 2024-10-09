@@ -2,18 +2,16 @@ import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common
 import {UserRepository} from '@features/user/repository/user.repository';
 import {PasswordService} from '@shared/services/password-service.service';
 import {CreateUserDto} from '@features/user/dto/create-user.dto';
-import {JwtService} from '@nestjs/jwt';
 import {Tokens} from '@features/user/model/verifyToken.model';
-import {ConfigService} from '@nestjs/config';
-import {LoginUserDto} from './dto/login-user.dto';
+import {LoginUserDto} from '@features/user/dto/login-user.dto';
+import {TokenService} from '@shared/services/token.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly passwordService: PasswordService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async register(dto: CreateUserDto): Promise<Tokens> {
@@ -25,13 +23,13 @@ export class UserService {
     const hashedPassword = await this.passwordService.hashPassword(dto.password);
     dto.password = hashedPassword;
 
-    const user = await this.userRepository.createUser(dto);
+    const cratedUser = await this.userRepository.createUser(dto);
 
     const payload = {
-      user_id: user.id,
+      user_id: cratedUser.id,
     };
-    const tokens = await this.getTokens(payload);
-
+    const tokens = await this.tokenService.getTokens(payload);
+    await this.updateRtHash(tokens.refresh_token, cratedUser.id);
     return tokens;
   }
 
@@ -50,26 +48,34 @@ export class UserService {
     const payload = {
       user_id: existingUser.id,
     };
-    const tokens = await this.getTokens(payload);
-
+    const tokens = await this.tokenService.getTokens(payload);
+    await this.updateRtHash(tokens.refresh_token, existingUser.id);
     return tokens;
   }
 
-  async getTokens(payload: any): Promise<Tokens> {
-    const [at, rt] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('JWT_AT_SECRET'),
-        expiresIn: '1d',
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('JWT_RT_SECRET'),
-        expiresIn: '7d',
-      }),
-    ]);
+  async getUserById(user: any) {
+    const userById = await this.userRepository.getUserById(user.id);
 
-    return {
-      access_token: at,
-      refresh_token: rt,
+    if (!userById) {
+      throw new NotFoundException(`Account not found`);
+    }
+
+    return userById;
+  }
+
+  async refreshTokens(user: any): Promise<Tokens> {
+    const userById = await this.getUserById(user.id);
+
+    const payload = {
+      user_id: userById.id,
     };
+    const tokens = await this.tokenService.getTokens(payload);
+    await this.updateRtHash(tokens.refresh_token, userById.id);
+    return tokens;
+  }
+
+  async updateRtHash(token: string, user: any): Promise<void> {
+    const rtHash = await this.passwordService.hashPassword(token);
+    await this.userRepository.updateRefreshToken(user.id, rtHash);
   }
 }
