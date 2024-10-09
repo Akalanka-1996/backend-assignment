@@ -5,6 +5,7 @@ import {CreateUserDto} from '@features/user/dto/create-user.dto';
 import {JwtService} from '@nestjs/jwt';
 import {Tokens} from '@features/user/model/verifyToken.model';
 import {ConfigService} from '@nestjs/config';
+import {LoginUserDto} from './dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -28,6 +29,26 @@ export class UserService {
 
     const payload = {
       user_id: user.id,
+    };
+    const tokens = await this.getTokens(payload);
+
+    return tokens;
+  }
+
+  async login(dto: LoginUserDto): Promise<Tokens> {
+    const existingUser = await this.userRepository.getUserByEmail(dto.email);
+    if (!existingUser) {
+      throw new BadRequestException(`Account not found`);
+    }
+
+    const isValidPassword = await this.passwordService.comparePasswords(dto.password, existingUser.password);
+
+    if (!isValidPassword) {
+      throw new BadRequestException('Invalid password');
+    }
+
+    const payload = {
+      user_id: existingUser.id,
     };
     const tokens = await this.getTokens(payload);
 
