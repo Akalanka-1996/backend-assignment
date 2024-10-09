@@ -13,4 +13,12 @@ export class EnvironmentConfig {
   @IsNotEmpty()
   @IsString()
   DATABASE_URL: string;
+
+  @IsString()
+  @IsNotEmpty()
+  JWT_AT_SECRET: string;
+
+  @IsString()
+  @IsNotEmpty()
+  JWT_RT_SECRET: string;
 }

@@ -1,3 +1,3 @@
-import {createMethodDecorator} from '@nestjs/swagger/dist/decorators/helpers';
+import {SetMetadata} from '@nestjs/common';
 
-export const Public: MethodDecorator = createMethodDecorator('isPublic', true);
+export const Public = () => SetMetadata('isPublic', true);

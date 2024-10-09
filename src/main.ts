@@ -1,5 +1,5 @@
 import {NestFactory} from '@nestjs/core';
-import {Logger, ValidationPipe} from '@nestjs/common';
+import {Logger, ValidationPipe, VersioningType} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -18,6 +18,13 @@ const bootstrap = async () => {
     }),
   );
 
+  app.setGlobalPrefix('api');
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
+
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 
   app.useGlobalFilters(new ApiErrorFilter());
@@ -26,8 +33,8 @@ const bootstrap = async () => {
   app.use(helmet());
 
   const config = new DocumentBuilder()
-    .setTitle('KSFT NestJS template')
-    .setDescription('Base template for NestJS applications')
+    .setTitle(' Location Device Management System')
+    .setDescription('Api collection for location device management system')
     .setVersion('1.0.0')
     .build();
 
