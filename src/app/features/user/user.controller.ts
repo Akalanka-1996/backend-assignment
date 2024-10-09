@@ -1,4 +1,4 @@
-import {Body, Controller, Post, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, HttpCode, HttpStatus, Post, UseInterceptors} from '@nestjs/common';
 import {UserService} from '@features/user/user.service';
 import {ApiResources} from '@core/constants/resource-constants';
 import {ApiTags} from '@nestjs/swagger';
@@ -24,6 +24,7 @@ export class UserController {
   @Post('/login')
   @Public()
   @UseInterceptors(LowerCaseEmailInterceptor)
+  @HttpCode(HttpStatus.OK)
   async login(@Body(new EmailValidationPipe()) loginUserDto: LoginUserDto): Promise<Tokens> {
     return this.userService.login(loginUserDto);
   }

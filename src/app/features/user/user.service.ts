@@ -38,7 +38,7 @@ export class UserService {
   async login(dto: LoginUserDto): Promise<Tokens> {
     const existingUser = await this.userRepository.getUserByEmail(dto.email);
     if (!existingUser) {
-      throw new BadRequestException(`Account not found`);
+      throw new NotFoundException(`Account not found`);
     }
 
     const isValidPassword = await this.passwordService.comparePasswords(dto.password, existingUser.password);
