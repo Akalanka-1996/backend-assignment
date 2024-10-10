@@ -49,8 +49,37 @@ model Location {
   status    LocationStatus
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+  Device    Device[]
 
   @@map("locations")
+}
+
+model Device {
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(100)
+  description  String?      @db.VarChar(255)
+  imageUrl     String       @db.VarChar(255)
+  serialNumber String       @unique @db.VarChar(100)
+  type         DeviceType
+  status       DeviceStatus
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@map("devices")
+}
+
+enum DeviceType {
+  pos
+  kiosk
+  signage
+}
+
+enum DeviceStatus {
+  Active
+  Inactive
 }
 
 enum LocationStatus {
