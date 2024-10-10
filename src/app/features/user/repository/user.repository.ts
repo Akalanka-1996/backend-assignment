@@ -21,6 +21,19 @@ export class UserRepository {
     });
   }
 
+  async getUserWithToken(id: number) {
+    return this.prismaService.user.findUnique({
+      where: {id},
+      include: {
+        refreshTokens: {
+          select: {
+            tokenHash: true,
+          },
+        },
+      },
+    });
+  }
+
   async createUser(dto: any) {
     return await this.prismaService.user.create({
       data: dto,

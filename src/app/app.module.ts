@@ -4,6 +4,8 @@ import {FeaturesModule} from '@features/features.module';
 import {ConfigModule} from '@config/config.module';
 import {AuthGuard} from '@guards/auth.guard';
 import {SharedModule} from '@shared/shared.module';
+import {UserService} from '@features/user/user.service';
+import {UserRepository} from '@features/user/repository/user.repository';
 
 @Module({
   imports: [ConfigModule, FeaturesModule, SharedModule],
@@ -13,6 +15,8 @@ import {SharedModule} from '@shared/shared.module';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    UserService,
+    UserRepository,
   ],
 })
 export class AppModule {}

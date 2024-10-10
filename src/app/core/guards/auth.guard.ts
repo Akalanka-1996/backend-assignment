@@ -1,12 +1,12 @@
+import {UserService} from '@features/user/user.service';
 import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
-import {TokenService} from '@shared/services/token.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly tokenService: TokenService,
+    private readonly userService: UserService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
 
     const token = request?.headers['authorization']?.split('Bearer ')[1];
     try {
-      const result = await this.tokenService.verifyAccessToken(token);
+      const result = await this.userService.verifyAccessToken(token);
       request.user = result;
       return true;
     } catch (err) {

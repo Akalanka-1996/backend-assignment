@@ -8,3 +8,9 @@ export interface VerifyTokenType {
     [key: string]: Tokens;
   };
 }
+
+export interface JWTPayload {
+  user_id: string;
+  iat: number;
+  exp: number;
+}
