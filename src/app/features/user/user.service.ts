@@ -50,7 +50,7 @@ export class UserService {
     const isValidPassword = await this.passwordService.comparePasswords(dto.password, existingUser.password);
 
     if (!isValidPassword) {
-      throw new BadRequestException('Invalid password');
+      throw new BadRequestException('Invalid credentials!');
     }
 
     const payload = {
