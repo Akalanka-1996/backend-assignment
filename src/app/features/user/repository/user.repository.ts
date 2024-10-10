@@ -47,7 +47,6 @@ export class UserRepository {
     const existingToken = await this.prismaService.refreshToken.findFirst({
       where: {userId: userId},
     });
-
     if (existingToken) {
       await this.prismaService.refreshToken.update({
         where: {id: existingToken.id},

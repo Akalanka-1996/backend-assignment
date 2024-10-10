@@ -61,22 +61,12 @@ export class UserService {
     return tokens;
   }
 
-  async getUserById(user: any) {
-    const userById = await this.userRepository.getUserById(user.id);
-
-    if (!userById) {
-      throw new NotFoundException(`Account not found`);
-    }
-
-    return userById;
-  }
-
   async refreshTokens(user: any): Promise<Tokens> {
     const payload = {
       user_id: user.id,
     };
     const tokens = await this.getTokens(payload);
-    await this.updateRtHash(tokens.refresh_token, user);
+    await this.updateRtHash(tokens.refresh_token, user.id);
     return tokens;
   }
 
@@ -100,10 +90,16 @@ export class UserService {
 
   async verifyAccessToken(token: string): Promise<any> {
     try {
-      const secret = this.configService.get<string>('JWT_AT_SECRET');
-      return this.jwtService.verifyAsync(token, {
-        secret,
+      const jwtSecret = this.configService.get<string>('JWT_AT_SECRET');
+      const decodedPayload = await this.jwtService.verifyAsync<JWTPayload>(token, {
+        secret: jwtSecret,
       });
+      const user = await this.userRepository.getUserById(+decodedPayload.user_id);
+
+      if (!user) {
+        throw new UnauthorizedException('Account Not Found');
+      }
+      return user;
     } catch (error) {
       throw new UnauthorizedException('Invalid Access Token');
     }
@@ -129,8 +125,8 @@ export class UserService {
     }
   }
 
-  async updateRtHash(token: string, user: any): Promise<void> {
+  async updateRtHash(token: string, userId: number): Promise<void> {
     const rtHash = await this.passwordService.hashPassword(token);
-    await this.userRepository.updateRefreshToken(user.id, rtHash);
+    await this.userRepository.updateRefreshToken(userId, rtHash);
   }
 }
