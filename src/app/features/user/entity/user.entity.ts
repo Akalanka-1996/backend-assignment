@@ -5,10 +5,16 @@ import {IsNotEmpty, IsString, Matches, MaxLength, MinLength} from 'class-validat
 export class User implements DbUser {
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'johndoe@gmail.com',
+    description: 'The email of the user',
+  })
   @IsString()
   email: string;
-  @ApiProperty()
+
+  @ApiProperty({
+    example: 'John',
+  })
   @IsString()
   @IsNotEmpty()
   @MinLength(2, {message: 'First Name must be at least 2 characters long'})
@@ -18,7 +24,9 @@ export class User implements DbUser {
   })
   first_name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: 'Doe',
+  })
   @IsString()
   @IsNotEmpty()
   @MinLength(2, {message: 'First Name must be at least 2 characters long'})
