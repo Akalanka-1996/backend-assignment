@@ -11,7 +11,7 @@ Clone the repository to your local machine.
 ```npm i```
 
 
-## Step 3: Create a .env file in the root directory and add the following environment variables.
+## Step 3: Environment Setup
 
 ```
 DATABASE_URL=
