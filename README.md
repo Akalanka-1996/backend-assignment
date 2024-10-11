@@ -24,4 +24,4 @@ You can add a random secret value for JWT secret. Please note that there is alea
 
 ```npm run start```
 
-### Important: Please make sure the backend server is up and running on port 3002
+#### Swagger Url: go to ```http://localhost:3002/api#/``` in your browser
