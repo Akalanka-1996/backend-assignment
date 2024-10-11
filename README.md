@@ -18,7 +18,7 @@ DATABASE_URL=
 JWT_AT_SECRET=
 JWT_RT_SECRET=
 ```
-You can add a random secret value for JWT secret. Please note that there is aleady an example env file in the repository.
+You can add a random secret values for access token(AT) and refresh token(RT) secrets. Postgres is the database for the project. Add a postgres url either from locally or an online solution like neon.
 
 ## Step 4: Run the project by following command
 
