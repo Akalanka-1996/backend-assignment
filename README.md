@@ -33,7 +33,7 @@ create a new database locally and add the URI as follows.<br>
 
 Then run the following two commands.
 
-```npx prisma generate```
+```npx prisma generate```<br>
 ```npx prisma db push```
 
 ## Step 4: Run the project by following command
