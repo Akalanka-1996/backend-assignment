@@ -13,6 +13,8 @@ Clone the repository to your local machine.
 
 ## Step 3: Environment Setup
 
+Create a .env file in the root directory and add following environment varialbes to it.
+
 ```
 DATABASE_URL=
 JWT_AT_SECRET=
@@ -23,7 +25,7 @@ You can add a random secret values for access token(AT) and refresh token(RT) se
 ## Step 4: Database setup
 
 Postgres is the database for the project. 
-Add a postgres connection URI to ```DATABASE_URL``` in the .env either from locally or an online solution like [Neon](https://neon.tech/).
+Add a postgres connection URI to ```DATABASE_URL``` in the .env file, either from locally or an online solution like [Neon](https://neon.tech/).
 
 ### use a local postgres instance
 create a new database locally and add the URI as follows.<br>
