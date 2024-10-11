@@ -1,7 +1,7 @@
 import {Body, Controller, HttpCode, HttpStatus, Post, UseGuards, UseInterceptors} from '@nestjs/common';
 import {UserService} from '@features/user/user.service';
 import {ApiResources} from '@core/constants/resource-constants';
-import {ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
 import {Public} from '@core/decorators/public.decorator';
 import {CreateUserDto} from '@features/user/dto/create-user.dto';
 import {LowerCaseEmailInterceptor} from '@core/interceptors/lower-case-email.interceptor';
@@ -38,7 +38,15 @@ export class UserController {
   @UseGuards(RefreshGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({summary: 'Refresh token'})
-  async refreshTokens(@User() user: any) {
+  async refreshTokens(@User() user: any): Promise<Tokens> {
     return this.userService.refreshTokens(user);
+  }
+
+  @Post('/logout')
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({summary: 'Logout user'})
+  async logout(@User() user: any): Promise<void> {
+    return this.userService.logout(user);
   }
 }

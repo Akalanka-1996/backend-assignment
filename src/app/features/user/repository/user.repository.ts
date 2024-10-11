@@ -67,4 +67,12 @@ export class UserRepository {
       });
     }
   }
+
+  async removeRefreshToken(userId: number) {
+    await this.prismaService.refreshToken.deleteMany({
+      where: {
+        userId: userId,
+      },
+    });
+  }
 }

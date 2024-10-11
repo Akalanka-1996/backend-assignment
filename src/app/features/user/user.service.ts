@@ -70,6 +70,10 @@ export class UserService {
     return tokens;
   }
 
+  async logout(user: any): Promise<void> {
+    await this.userRepository.removeRefreshToken(user.id);
+  }
+
   async getTokens(payload: any): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(payload, {
