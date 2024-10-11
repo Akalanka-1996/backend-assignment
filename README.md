@@ -26,7 +26,7 @@ Postgres is the database for the project.
 Add a postgres url to ```DATABASE_URL``` either from locally or an online solution like [Neon](https://neon.tech/).
 
 ### use a local postgres instance
-create a new database locally and add the URI as follows.
+create a new database locally and add the URI as follows.<br>
 ```postgresql://<postgres_username>:<password_of_the_user>@localhost:5432/<db_name>```
 
 ## Step 4: Run the project by following command
