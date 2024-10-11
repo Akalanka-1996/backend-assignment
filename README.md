@@ -24,7 +24,7 @@ You can add a random secret values for access token(AT) and refresh token(RT) se
 
 ## Step 4: Database setup
 
-Postgres is the database for the project. 
+Postgres is the database for the project with [Prisma](https://www.prisma.io/) ORM. 
 Add a postgres connection URI to ```DATABASE_URL``` in the .env file, either from locally or an online solution like [Neon](https://neon.tech/).
 
 ### use a local postgres instance
