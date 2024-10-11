@@ -1,7 +1,7 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query} from '@nestjs/common';
 import {LocationService} from '@features/location/location.service';
 import {ApiResources} from '@core/constants/resource-constants';
-import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {CreateLocationDto} from '@features/location/dto/create-location.dto';
 import {Location} from '@features/location/entity/location.entity';
 import {UpdateLocationDto} from '@features/location/dto/update-location.dto';
@@ -20,9 +20,11 @@ export class LocationController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({summary: 'Get all locations'})
-  async getLocations(): Promise<Location[]> {
-    return await this.locationService.getLocations();
+  @ApiOperation({summary: 'Get all locations with pagination'})
+  @ApiQuery({name: 'page', required: false, type: Number, description: 'Page number for pagination, default is 1'})
+  @ApiQuery({name: 'limit', required: false, type: Number, description: 'Number of items per page, default is 10'})
+  async getLocations(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<Location[]> {
+    return await this.locationService.getLocations(+page, +limit);
   }
 
   @Get(`:id`)

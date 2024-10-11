@@ -35,8 +35,8 @@ export class DeviceService {
     return await this.deviceRepository.createDevice(dto);
   }
 
-  async get(): Promise<Device[]> {
-    return await this.deviceRepository.getDeviceList();
+  async get(page: number, limit: number): Promise<Device[]> {
+    return await this.deviceRepository.getDeviceList(page, limit);
   }
 
   async getByLocation(locationId: number) {

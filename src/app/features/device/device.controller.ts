@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query} from '@nestjs/common';
 import {DeviceService} from '@features/device/device.service';
 import {ApiResources} from '@core/constants/resource-constants';
-import {ApiBearerAuth, ApiOperation, ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
 import {CreateDeviceDto} from '@features/device/dto/create-device.dto';
 import {Device} from '@features/device/entity/device.entity';
 import {UpdateDeviceDto} from '@features/device/dto/update-device.dto';
@@ -20,9 +20,11 @@ export class DeviceController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({summary: 'Get all devices'})
-  async get(): Promise<Device[]> {
-    return await this.deviceService.get();
+  @ApiOperation({summary: 'Get all devices with pagination'})
+  @ApiQuery({name: 'page', required: false, type: Number, description: 'Page number for pagination, default is 1'})
+  @ApiQuery({name: 'limit', required: false, type: Number, description: 'Number of items per page, default is 10'})
+  async get(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<Device[]> {
+    return await this.deviceService.get(+page, +limit);
   }
 
   @Get('location')

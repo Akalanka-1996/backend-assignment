@@ -23,8 +23,13 @@ export class LocationRepository {
     };
   }
 
-  async getLocationList() {
-    return await this.prismaService.location.findMany({});
+  async getLocationList(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    return await this.prismaService.location.findMany({
+      skip,
+      take: limit,
+    });
   }
 
   async getLocationById(id: number) {

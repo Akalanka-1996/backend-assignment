@@ -12,8 +12,8 @@ export class LocationService {
     return await this.locationRepository.createLocation(dto);
   }
 
-  async getLocations(): Promise<Location[]> {
-    return await this.locationRepository.getLocationList();
+  async getLocations(page: number, limit: number): Promise<Location[]> {
+    return await this.locationRepository.getLocationList(page, limit);
   }
 
   async getById(locationId: number): Promise<Location> {
