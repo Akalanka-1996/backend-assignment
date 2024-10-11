@@ -31,6 +31,11 @@ Add a postgres connection URI to ```DATABASE_URL``` in the .env file, either fro
 create a new database locally and add the URI as follows.<br>
 ```''postgresql://<postgres_username>:<password_of_the_user>@localhost:5432/<db_name>''```
 
+Then run the following two commands.
+
+```npx prisma generate```
+```npx prisma db push```
+
 ## Step 4: Run the project by following command
 
 ```npm run start```
